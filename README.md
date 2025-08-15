@@ -2,11 +2,11 @@
 Welcome to skmention, a Skript for the Skript plugin! This script provides a versatile solution for Minecraft server players to mention others in chat. With support for multiple languages, cooldowns, and administrative control over mention features, it ensures a seamless communication experience.
 
 # ✨ Features
-- Player Mentions: Easily mention specific players using @<player_name> or <player_name>!.
+- Player Mentions: Easily mention specific players using `@<player_name>` or `<player_name>!`.
 
-- Global Mentions: Mention all online players with @all, @everyone, all!, or everyone! commands (requires permission).
+- Global Mentions: Mention all online players with `@all`, `@everyone`, `all!`, or `everyone!` commands (requires permission).
 
-- Multi-language Support: Action bar notifications are supported in English, Japanese, Spanish, French, German, Italian, Portuguese, Russian, Korean, Chinese, Arabic, Dutch, Swedish, and Polish.
+- Multi-language Support: Action bar notifications are supported in `English`, `Japanese`, `Spanish`, `French`, `German`, `Italian, `Portuguese, `Russian`, `Korean`, `Chinese`, `Arabic`, `Dutch`, `Swedish`, and `Polish`.
 
 - Cooldowns: A 5-second cooldown is implemented to prevent mention spam.
 
