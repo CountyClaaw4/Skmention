@@ -6,7 +6,7 @@ Welcome to skmention, a Skript for the Skript plugin! This script provides a ver
 
 - Global Mentions: Mention all online players with `@all`, `@everyone`, `all!`, or `everyone!` commands (requires permission).
 
-- Multi-language Support: Action bar notifications are supported in `English`, `Japanese`, `Spanish`, `French`, `German`, `Italian, `Portuguese, `Russian`, `Korean`, `Chinese`, `Arabic`, `Dutch`, `Swedish`, and `Polish`.
+- Multi-language Support: Action bar notifications are supported in `English`, `Japanese`, `Spanish`, `French`, `German`, `Italian`, `Portuguese`, `Russian`, `Korean`, `Chinese`, `Arabic`, `Dutch`, `Swedish`, and `Polish`.
 
 - Cooldowns: A 5-second cooldown is implemented to prevent mention spam.
 
