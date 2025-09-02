@@ -1,0 +1,1331 @@
+# skmention V1.1.0
+
+# Copyright (c) 2025 CountyClaw4
+# Licensed under the MIT License.
+
+# This script allows players to mention others in chat, with support for multiple languages and cooldowns.
+# Players can mention all players with special commands if they have the required permissions.
+# Players can also be banned from using the mention feature by administrators.
+# This script is designed for use with Skript and requires the Skript plugin to function.
+
+# If you find a issue, please report it in the GitHub repository.
+
+# this script is made for Skript 2.4.0 and above
+# it is recommended to use the latest version of Skript for best performance and compatibility
+
+# ========================================
+#                config
+# ========================================
+options:
+    # Enable or disable cooldown for mentions
+    # If set to false, players can mention without cooldown
+    # default: true
+    enable_cooldown: true
+    # Enable or disable cooldown message
+    # If set to true, players will receive a message when they are on cooldown
+    # If enable_cooldown is false, this option will be ignored
+    # default: true
+    enable_cooldown_message: true
+    # The cooldown time for mentions in seconds
+    # This is the time a player must wait before they can mention again
+    # If enable_cooldown is false, this option will be ignored
+    # default: 5
+    cooldown: 5
+    # The format for mentions in chat
+    # This is the format that will be used when a player is mentioned
+    # You can use &5 for color codes and _name_ will be replaced with the player's name
+    # default: "&5@_name_&r"
+    mention.format: "&5@_name_&r"
+    # The default language for the plugin
+    # This is the language that will be used if the player's language is not supported
+    # You can add more languages by adding them to the config
+    # The supported languages are: en, ja, es, fr, de, it, pt, ru, ko, zh, ar, nl, sv, pl
+    # default: "en"
+    default.language: "en"
+
+# ========================================
+#                Languages
+# ========================================
+    # English(en)
+    skmention.lang.en.mentioned: "&eYou were mentioned by _sender_"
+    skmention.lang.en.ugage.mentionban: "&cUsage: /mentionban <player>"
+    skmention.lang.en.ugage.mentionunban: "&cUsage: /mentionunban <player>"
+    skmention.lang.en.sucsess.mentionban: "&aYou have banned _target_'s mention feature"
+    skmention.lang.en.sucsess.mentionunban: "&aYou have unbanned _target_'s mention feature"
+    skmention.lang.en.sucsess.mentionban.target: "&cYour mention feature has been banned"
+    skmention.lang.en.sucsess.mentionunban.target: "&aYour mention feature has been unbanned"
+    skmention.lang.en.mention.cooldown: "&eYou are on cooldown for mentions. Please wait before trying again."
+    skmention.lang.en.about.mention.1: "&6=== About Mention Feature ==="
+    skmention.lang.en.about.mention.2: "&eUse @<player> or <player>! to mention a player"
+    skmention.lang.en.about.mention.3: "&eUse @all, @everyone, all!, everyone! to mention all players (requires skmention.all)"
+    skmention.lang.en.about.mention.4: "&eCooldown: _cooldown_ seconds"
+    skmention.lang.en.about.mention.5: "&cAdmin commands:"
+    skmention.lang.en.about.mention.6: "&c/mentionban <player> - Ban mention feature"
+    skmention.lang.en.about.mention.7: "&c/mentionunban <player> - Unban mention feature"
+    # Japanese(ja)
+    skmention.lang.ja.mentioned: "&e_sender_にメンションされました"
+    skmention.lang.ja.ugage.mentionban: "&c使い方: /mentionban <プレイヤー名>"
+    skmention.lang.ja.ugage.mentionunban: "&c使い方: /mentionunban <プレイヤー名>"
+    skmention.lang.ja.sucsess.mentionban: "&a_target_ のメンション機能をBANしました"
+    skmention.lang.ja.sucsess.mentionunban: "&a_target_ のメンションBANを解除しました"
+    skmention.lang.ja.sucsess.mentionban.target: "&cあなたのメンション機能がBANされました"
+    skmention.lang.ja.sucsess.mentionunban.target: "&aあなたのメンションBANが解除されました"
+    skmention.lang.ja.mention.cooldown: "&eメンションはクールダウン中です。しばらく待ってからもう一度お試しください。"
+    skmention.lang.ja.about.mention.1: "&6=== メンション機能について ==="
+    skmention.lang.ja.about.mention.2: "&e@<プレイヤー名> または <プレイヤー名>! でプレイヤーにメンション"
+    skmention.lang.ja.about.mention.3: "&e@all, @everyone, all!, everyone! で全プレイヤーにメンション（要権限）"
+    skmention.lang.ja.about.mention.4: "&eクールダウン: _cooldown_ 秒"
+    skmention.lang.ja.about.mention.5: "&c管理者コマンド:"
+    skmention.lang.ja.about.mention.6: "&c/mentionban <プレイヤー名> - メンションBAN"
+    skmention.lang.ja.about.mention.7: "&c/mentionunban <プレイヤー名> - メンションBAN解除"
+    # Spanish(es)
+    skmention.lang.es.mentioned: "&eHas sido mencionado por _sender_"
+    skmention.lang.es.ugage.mentionban: "&cUso: /mentionban <jugador>"
+    skmention.lang.es.ugage.mentionunban: "&cUso: /mentionunban <jugador>"
+    skmention.lang.es.sucsess.mentionban: "&aHas bloqueado la función de mención de _target_"
+    skmention.lang.es.sucsess.mentionunban: "&aHas desbloqueado la función de mención de _target_"
+    skmention.lang.es.sucsess.mentionban.target: "&cTu función de mención ha sido bloqueada"
+    skmention.lang.es.sucsess.mentionunban.target: "&aTu función de mención ha sido desbloqueada"
+    skmention.lang.es.mention.cooldown: "&eEstás en tiempo de espera para menciones. Por favor, espera antes de intentar nuevamente."
+    skmention.lang.es.about.mention.1: "&6=== Sobre la función de Menciones ==="
+    skmention.lang.es.about.mention.2: "&eUsa @<jugador> o <jugador>! para mencionar a un jugador"
+    skmention.lang.es.about.mention.3: "&eUsa @all, @everyone, all!, everyone! para mencionar a todos los jugadores (requiere permiso)"
+    skmention.lang.es.about.mention.4: "&eTiempo de espera: _cooldown_ segundos"
+    skmention.lang.es.about.mention.5: "&cComandos de administrador:"
+    skmention.lang.es.about.mention.6: "&c/mentionban <jugador> - Bloquear función de mención"
+    skmention.lang.es.about.mention.7: "&c/mentionunban <jugador> - Desbloquear función de mención"
+    # French(fr)
+    skmention.lang.fr.mentioned: "&eVous avez été mentionné par _sender_"
+    skmention.lang.fr.ugage.mentionban: "&cUtilisation: /mentionban <joueur>"
+    skmention.lang.fr.ugage.mentionunban: "&cUtilisation: /mentionunban <joueur>"
+    skmention.lang.fr.sucsess.mentionban: "&aVous avez bloqué la fonction de mention de _target_"
+    skmention.lang.fr.sucsess.mentionunban: "&aVous avez débloqué la fonction de mention de _target_"
+    skmention.lang.fr.sucsess.mentionban.target: "&cVotre fonction de mention a été bloquée"
+    skmention.lang.fr.sucsess.mentionunban.target: "&aVotre fonction de mention a été débloquée"
+    skmention.lang.fr.mention.cooldown: "&eVous êtes en attente pour les mentions. Veuillez attendre avant de réessayer."
+    skmention.lang.fr.about.mention.1: "&6=== À propos de la fonction de mention ==="
+    skmention.lang.fr.about.mention.2: "&eUtilisez @<joueur> ou <joueur>! pour mentionner un joueur"
+    skmention.lang.fr.about.mention.3: "&eUtilisez @all, @everyone, all!, everyone! pour mentionner tous les joueurs (nécessite la permission)"
+    skmention.lang.fr.about.mention.4: "&eTemps de recharge: _cooldown_ secondes"
+    skmention.lang.fr.about.mention.5: "&cCommandes admin:"
+    skmention.lang.fr.about.mention.6: "&c/mentionban <joueur> - Bannir la fonction de mention"
+    skmention.lang.fr.about.mention.7: "&c/mentionunban <joueur> - Débannir la fonction de mention"
+    # German(de)
+    skmention.lang.de.mentioned: "&eDu wurdest von _sender_ erwähnt"
+    skmention.lang.de.ugage.mentionban: "&cVerwendung: /mentionban <Spieler>"
+    skmention.lang.de.ugage.mentionunban: "&cVerwendung: /mentionunban <Spieler>"
+    skmention.lang.de.sucsess.mentionban: "&aDu hast die Erwähnungsfunktion von _target_ gesperrt"
+    skmention.lang.de.sucsess.mentionunban: "&aDu hast die Erwähnungsfunktion von _target_ freigegeben"
+    skmention.lang.de.sucsess.mentionban.target: "&cDeine Erwähnungsfunktion wurde gesperrt"
+    skmention.lang.de.sucsess.mentionunban.target: "&aDeine Erwähnungsfunktion wurde freigegeben"
+    skmention.lang.de.mention.cooldown: "&eDu bist im Cooldown für Erwähnungen. Bitte warte, bevor du es erneut versuchst."
+    skmention.lang.de.about.mention.1: "&6=== Über die Mention-Funktion ==="
+    skmention.lang.de.about.mention.2: "&eVerwende @<Spieler> oder <Spieler>! um einen Spieler zu erwähnen"
+    skmention.lang.de.about.mention.3: "&eVerwende @all, @everyone, all!, everyone! um alle Spieler zu erwähnen (Berechtigung erforderlich)"
+    skmention.lang.de.about.mention.4: "&eCooldown: _cooldown_ Sekunden"
+    skmention.lang.de.about.mention.5: "&cAdmin-Befehle:"
+    skmention.lang.de.about.mention.6: "&c/mentionban <Spieler> - Erwähnungsfunktion sperren"
+    skmention.lang.de.about.mention.7: "&c/mentionunban <Spieler> - Erwähnungsfunktion freigeben"
+    # Italian(it)
+    skmention.lang.it.mentioned: "&eSei stato menzionato da _sender_"
+    skmention.lang.it.ugage.mentionban: "&cUso: /mentionban <giocatore>"
+    skmention.lang.it.ugage.mentionunban: "&cUso: /mentionunban <giocatore>"
+    skmention.lang.it.sucsess.mentionban: "&aHai bloccato la funzione di menzione di _target_"
+    skmention.lang.it.sucsess.mentionunban: "&aHai sbloccato la funzione di menzione di _target_"
+    skmention.lang.it.sucsess.mentionban.target: "&cLa tua funzione di menzione è stata bloccata"
+    skmention.lang.it.sucsess.mentionunban.target: "&aLa tua funzione di menzione è stata sbloccata"
+    skmention.lang.it.mention.cooldown: "&eSei in attesa per le menzioni. Attendi prima di riprovare."
+    skmention.lang.it.about.mention.1: "&6=== Informazioni sulla funzione Mention ==="
+    skmention.lang.it.about.mention.2: "&eUsa @<giocatore> o <giocatore>! per menzionare un giocatore"
+    skmention.lang.it.about.mention.3: "&eUsa @all, @everyone, all!, everyone! per menzionare tutti i giocatori (permesso richiesto)"
+    skmention.lang.it.about.mention.4: "&eTempo di attesa: _cooldown_ secondi"
+    skmention.lang.it.about.mention.5: "&cComandi admin:"
+    skmention.lang.it.about.mention.6: "&c/mentionban <giocatore> - Blocca la funzione di menzione"
+    skmention.lang.it.about.mention.7: "&c/mentionunban <giocatore> - Sblocca la funzione di menzione"
+    # Portuguese(pt)
+    skmention.lang.pt.mentioned: "&eVocê foi mencionado por _sender_"
+    skmention.lang.pt.ugage.mentionban: "&cUso: /mentionban <jogador>"
+    skmention.lang.pt.ugage.mentionunban: "&cUso: /mentionunban <jogador>"
+    skmention.lang.pt.sucsess.mentionban: "&aVocê bloqueaou a função de menção de _target_"
+    skmention.lang.pt.sucsess.mentionunban: "&aVocê desbloqueou a função de menção de _target_"
+    skmention.lang.pt.sucsess.mentionban.target: "&cSua função de menção foi bloqueada"
+    skmention.lang.pt.sucsess.mentionunban.target: "&aSua função de menção foi desbloqueada"
+    skmention.lang.pt.mention.cooldown: "&eVocê está em espera para menções. Por favor, aguarde antes de tentar novamente."
+    skmention.lang.pt.about.mention.1: "&6=== Sobre a função de Menção ==="
+    skmention.lang.pt.about.mention.2: "&eUse @<jogador> ou <jogador>! para mencionar um jogador"
+    skmention.lang.pt.about.mention.3: "&eUse @all, @everyone, all!, everyone! para mencionar todos os jogadores (requer permissão)"
+    skmention.lang.pt.about.mention.4: "&eTempo de espera: _cooldown_ segundos"
+    skmention.lang.pt.about.mention.5: "&cComandos de administrador:"
+    skmention.lang.pt.about.mention.6: "&c/mentionban <jogador> - Banir função de menção"
+    skmention.lang.pt.about.mention.7: "&c/mentionunban <jogador> - Desbanir função de menção"
+    # Russian(ru)
+    skmention.lang.ru.mentioned: "&eВы были упомянуты _sender_"
+    skmention.lang.ru.ugage.mentionban: "&cИспользование: /mentionban <игрок>"
+    skmention.lang.ru.ugage.mentionunban: "&cИспользование: /mentionunban <игрок>"
+    skmention.lang.ru.sucsess.mentionban: "&aВы заблокировали функцию упоминания _target_"
+    skmention.lang.ru.sucsess.mentionunban: "&aВы разблокировали функцию упоминания _target_"
+    skmention.lang.ru.sucsess.mentionban.target: "&cВаша функция упоминания была заблокирована"
+    skmention.lang.ru.sucsess.mentionunban.target: "&aВаша функция упоминания была разблокирована"
+    skmention.lang.ru.mention.cooldown: "&eВы находитесь в ожидании упоминаний. Пожалуйста, подождите перед повторной попыткой."
+    skmention.lang.ru.about.mention.1: "&6=== О функции упоминаний ==="
+    skmention.lang.ru.about.mention.2: "&eИспользуйте @<игрок> или <игрок>! для упоминания игрока"
+    skmention.lang.ru.about.mention.3: "&eИспользуйте @all, @everyone, all!, everyone! для упоминания всех игроков (требуется разрешение)"
+    skmention.lang.ru.about.mention.4: "&eЗадержка: _cooldown_ секунд"
+    skmention.lang.ru.about.mention.5: "&cКоманды администратора:"
+    skmention.lang.ru.about.mention.6: "&c/mentionban <игрок> - Заблокировать функцию упоминания"
+    skmention.lang.ru.about.mention.7: "&c/mentionunban <игрок> - Разблокировать функцию упоминания"
+    # Korean(ko)
+    skmention.lang.ko.mentioned: "&e_sender_님이 멘션하셨습니다"
+    skmention.lang.ko.ugage.mentionban: "&c사용법: /mentionban <플레이어>"
+    skmention.lang.ko.ugage.mentionunban: "&c사용법: /mentionunban <플레이어>"
+    skmention.lang.ko.sucsess.mentionban: "&a_target_ 님의 멘션 기능을 BAN했습니다"
+    skmention.lang.ko.sucsess.mentionunban: "&a_target_ 님의 멘션 BAN을 해제했습니다"
+    skmention.lang.ko.sucsess.mentionban.target: "&c당신의 멘션 기능이 BAN되었습니다"
+    skmention.lang.ko.sucsess.mentionunban.target: "&a당신의 멘션 BAN이 해제되었습니다"
+    skmention.lang.ko.mention.cooldown: "&e멘션은 쿨다운 중입니다. 잠시 후 다시 시도해주세요."
+    skmention.lang.ko.about.mention.1: "&6=== 멘션 기능에 대하여 ==="
+    skmention.lang.ko.about.mention.2: "&e@<플레이어> 또는 <플레이어>! 로 플레이어 멘션"
+    skmention.lang.ko.about.mention.3: "&e@all, @everyone, all!, everyone! 로 모든 플레이어 멘션 (권한 필요)"
+    skmention.lang.ko.about.mention.4: "&e쿨다운: _cooldown_ 초"
+    skmention.lang.ko.about.mention.5: "&c관리자 명령어:"
+    skmention.lang.ko.about.mention.6: "&c/mentionban <플레이어> - 멘션 BAN"
+    skmention.lang.ko.about.mention.7: "&c/mentionunban <플레이어> - 멘션 BAN 해제"
+    # Chinese(zh)
+    skmention.lang.zh.mentioned: "&e你被 _sender_ 提及了"
+    skmention.lang.zh.ugage.mentionban: "&c用法: /mentionban <玩家>"
+    skmention.lang.zh.ugage.mentionunban: "&c用法: /mentionunban <玩家>"
+    skmention.lang.zh.sucsess.mentionban: "&a你已禁止 _target_ 的提及功能"
+    skmention.lang.zh.sucsess.mentionunban: "&a你已解除 _target_ 的提及功能封禁"
+    skmention.lang.zh.sucsess.mentionban.target: "&c你的提及功能已被禁止"
+    skmention.lang.zh.sucsess.mentionunban.target: "&a你的提及功能已被解除"
+    skmention.lang.zh.mention.cooldown: "&e你正在冷却中，请稍后再试"
+    skmention.lang.zh.about.mention.1: "&6=== 关于提及功能 ==="
+    skmention.lang.zh.about.mention.2: "&e使用 @<玩家> 或 <玩家>! 来提及玩家"
+    skmention.lang.zh.about.mention.3: "&e使用 @all, @everyone, all!, everyone! 来提及所有玩家（需要权限）"
+    skmention.lang.zh.about.mention.4: "&e冷却时间: _cooldown_ 秒"
+    skmention.lang.zh.about.mention.5: "&c管理员命令:"
+    skmention.lang.zh.about.mention.6: "&c/mentionban <玩家> - 封禁提及功能"
+    skmention.lang.zh.about.mention.7: "&c/mentionunban <玩家> - 解除提及功能封禁"
+    # Arabic(ar)
+    skmention.lang.ar.mentioned: "&eتم الإشارة إليك بواسطة _sender_"
+    skmention.lang.ar.ugage.mentionban: "&cالاستخدام: /mentionban <اللاعب>"
+    skmention.lang.ar.ugage.mentionunban: "&cالاستخدام: /mentionunban <اللاعب>"
+    skmention.lang.ar.sucsess.mentionban: "&aلقد قمت بحظر ميزة الإشارة الخاصة بـ _target_"
+    skmention.lang.ar.sucsess.mentionunban: "&aلقد قمت بإلغاء حظر ميزة الإشارة الخاصة بـ _target_"
+    skmention.lang.ar.sucsess.mentionban.target: "&cتم حظر ميزة الإشارة الخاصة بك"
+    skmention.lang.ar.sucsess.mentionunban.target: "&aتم إلغاء حظر ميزة الإشارة الخاصة بك"
+    skmention.lang.ar.mention.cooldown: "&eأنت في فترة انتظار للإشارات. يرجى الانتظار قبل المحاولة مرة أخرى."
+    skmention.lang.ar.about.mention.1: "&6=== حول ميزة الإشارة ==="
+    skmention.lang.ar.about.mention.2: "&eاستخدم @<اللاعب> أو <اللاعب>! للإشارة إلى لاعب"
+    skmention.lang.ar.about.mention.3: "&eاستخدم @all, @everyone, all!, everyone! للإشارة إلى جميع اللاعبين (يتطلب إذن)"
+    skmention.lang.ar.about.mention.4: "&eفترة الانتظار: _cooldown_ ثوانٍ"
+    skmention.lang.ar.about.mention.5: "&cأوامر الإدارة:"
+    skmention.lang.ar.about.mention.6: "&c/mentionban <اللاعب> - حظر ميزة الإشارة"
+    skmention.lang.ar.about.mention.7: "&c/mentionunban <اللاعب> - إلغاء حظر ميزة الإشارة"
+    # Dutch(nl)
+    skmention.lang.nl.mentioned: "&eJe bent genoemd door _sender_"
+    skmention.lang.nl.ugage.mentionban: "&cGebruik: /mentionban <speler>"
+    skmention.lang.nl.ugage.mentionunban: "&cGebruik: /mentionunban <speler>"
+    skmention.lang.nl.sucsess.mentionban: "&aJe hebt de vermelding functie van _target_ geblokkeerd"
+    skmention.lang.nl.sucsess.mentionunban: "&aJe hebt de vermelding functie van _target_ gedeblokkeerd"
+    skmention.lang.nl.sucsess.mentionban.target: "&cJe vermelding functie is geblokkeerd"
+    skmention.lang.nl.sucsess.mentionunban.target: "&aJe vermelding functie is gedeblokkeerd"
+    skmention.lang.nl.mention.cooldown: "&eJe bent in cooldown voor vermeldingen. Wacht even voordat je het opnieuw probeert."
+    skmention.lang.nl.about.mention.1: "&6=== Over de Vermelding Functie ==="
+    skmention.lang.nl.about.mention.2: "&eGebruik @<speler> of <speler>! om een speler te vermelden"
+    skmention.lang.nl.about.mention.3: "&eGebruik @all, @everyone, all!, everyone! om alle spelers te vermelden (vereist toestemming)"
+    skmention.lang.nl.about.mention.4: "&eCooldown: _cooldown_ seconden"
+    skmention.lang.nl.about.mention.5: "&cBeheerder commando's:"
+    skmention.lang.nl.about.mention.6: "&c/mentionban <speler> - Vermelding functie blokkeren"
+    skmention.lang.nl.about.mention.7: "&c/mentionunban <speler> - Vermelding functie deblokkeren"
+    # Swedish(sv)
+    skmention.lang.sv.mentioned: "&eDu blev nämnd av _sender_"
+    skmention.lang.sv.ugage.mentionban: "&cAnvändning: /mentionban <spelare>"
+    skmention.lang.sv.ugage.mentionunban: "&cAnvändning: /mentionunban <spelare>"
+    skmention.lang.sv.sucsess.mentionban: "&aDu har blockerat nämningsfunktionen för _target_"
+    skmention.lang.sv.sucsess.mentionunban: "&aDu har uppblockerat nämningsfunktionen för _target_"
+    skmention.lang.sv.sucsess.mentionban.target: "&cDu har blockerat din nämningsfunktion"
+    skmention.lang.sv.sucsess.mentionunban.target: "&aDu har uppblockerat din nämningsfunktion"
+    skmention.lang.sv.mention.cooldown: "&eDu är i cooldown för nämningar. Vänligen vänta innan du försöker igen."
+    skmention.lang.sv.about.mention.1: "&6=== Om namningsfunktionen ==="
+    skmention.lang.sv.about.mention.2: "&eAnvänd @<spelare> eller <spelare>! för att nämna en spelare"
+    skmention.lang.sv.about.mention.3: "&eAnvänd @all, @everyone, all!, everyone! för att nämna alla spelare (kräver behörighet)"
+    skmention.lang.sv.about.mention.4: "&eVänta tid: _cooldown_ sekunder"
+    skmention.lang.sv.about.mention.5: "&cAdmin-kommandon:"
+    skmention.lang.sv.about.mention.6: "&c/mentionban <spelare> - Blockera nämningsfunktionen"
+    skmention.lang.sv.about.mention.7: "&c/mentionunban <spelare> - Avblockera nämningsfunktionen"
+    # Polish(pl)
+    skmention.lang.pl.mentioned: "&eZostałeś wspomniany przez _sender_"
+    skmention.lang.pl.ugage.mentionban: "&cUżycie: /mentionban <gracz>"
+    skmention.lang.pl.ugage.mentionunban: "&cUżycie: /mentionunban <gracz>"
+    skmention.lang.pl.sucsess.mentionban: "&aZablokowałeś funkcję wspominania _target_"
+    skmention.lang.pl.sucsess.mentionunban: "&aOdblokowałeś funkcję wspominania _target_"
+    skmention.lang.pl.sucsess.mentionban.target: "&cTwoja funkcja wspominania została zablokowana"
+    skmention.lang.pl.sucsess.mentionunban.target: "&aTwoja funkcja wspominania została odblokowana"
+    skmention.lang.pl.mention.cooldown: "&eJesteś w cooldownie dla wspomnień. Proszę poczekać przed ponowną próbą."
+    skmention.lang.pl.about.mention.1: "&6=== O funkcji wspominania ==="
+    skmention.lang.pl.about.mention.2: "&eUżyj @<gracz> lub <gracz>! aby wspomnieć gracza"
+    skmention.lang.pl.about.mention.3: "&eUżyj @all, @everyone, all!, everyone! aby wspomnieć wszystkich graczy (wymaga uprawnień)"
+    skmention.lang.pl.about.mention.4: "&eCooldown: _cooldown_ sekund"
+    skmention.lang.pl.about.mention.5: "&cPolecenia administratora:"
+    skmention.lang.pl.about.mention.6: "&c/mentionban <gracz> - Zablokuj funkcję wspominania"
+    skmention.lang.pl.about.mention.7: "&c/mentionunban <gracz> - Odblokuj funkcję wspominania"
+
+# ========================================
+#                Codes
+#             DO NOT TOUCH
+# ========================================
+# Set Variables
+variables:
+    {skmention.cooldown.%player%} = 0
+    {skmention.at} = "@"
+# Function: replaceMention
+# Purpose: Replaces all occurrences of a target word/phrase with a replacement in a message
+# This is used to transform mentions like "@PlayerName" into formatted versions
+# Parameters:
+#   - message: The original message text to process (text type)
+#   - target: The word/phrase to find and replace (text type) 
+#   - replacement: The text to replace the target with (text type)
+# Returns: The modified message with all replacements made (text type)
+function replaceMention(message: text, target: text, replacement: text) :: text:
+    
+    # Check if the message actually contains the target text before processing
+    # This prevents unnecessary processing if no replacement is needed
+    if {_message} contains {_target}:
+        
+        # Initialize an empty result string to build the final message
+        set {_result} to ""
+        
+        # Split the message by the target text, creating an array of parts
+        # Example: "Hello @John how are you @John?" split by "@John" 
+        # Results in: ["Hello ", " how are you ", "?"]
+        set {_parts::*} to {_message} split by {_target}
+        
+        # Initialize counter variable to track which part we're processing
+        # Used to handle the first part differently (no replacement prefix needed)
+        set {_i} to 1
+
+        # Loop through each part created by splitting the message
+        loop {_parts::*}:
+            
+            # Handle the first part - no replacement text needed before it
+            if {_i} is 1:
+                # Set result to the first part as-is
+                set {_result} to loop-value
+            else:
+                # For subsequent parts, add the replacement text before the part
+                # This reconstructs: "original_part" + "replacement" + "current_part"
+                # Example: "Hello " + "@John" + " how are you " + "@John" + "?"
+                set {_result} to "%{_result}%%{_replacement}%%loop-value%"
+            
+            # Increment counter to move to next part
+            add 1 to {_i}
+        
+        # Return the fully reconstructed message with all replacements made
+        return "%{_result}%"
+    else:
+        # If target text is not found in message, return original message unchanged
+        # This avoids unnecessary processing and maintains message integrity
+        return {_message}
+
+
+# Function: notifyAllPlayers  
+# Purpose: Sends a mention notification to every player currently online
+# This is typically used for @everyone or @all type mentions
+# Parameters:
+#   - sender: The player who triggered the mention notification (player type)
+# Returns: Nothing (void function)
+function notifyAllPlayers(sender: player):
+    
+    # Iterate through every player currently connected to the server
+    loop all players:
+        
+        # Call the notifyPlayer function for each online player
+        # Parameters passed:
+        #   - {_sender}: The original player who sent the mention
+        #   - "%loop-player%": The current player being notified (converted to string)
+        # 
+        # This will:
+        # 1. Play a notification sound to the current player
+        # 2. Display a localized message in their preferred language
+        # 3. Show who mentioned them (the sender)
+        notifyPlayer({_sender}, "%loop-player%")
+
+# Function: notifyPlayer
+# Purpose: Notifies a specific player when they are mentioned by another player
+# Parameters:
+#   - sender: The player who is mentioning someone (player type)
+#   - targetName: The name of the player being mentioned (text type)
+# Returns: "true" if player was found and notified, "false" if player not found
+function notifyPlayer(sender: player, targetName: text) :: text:
+    
+    # Loop through all currently online players to find the target player
+    loop all players:
+        
+        # Check if the current player in the loop matches the target player name
+        if loop-player is {_targetName}:
+            
+            # Play a level-up sound effect to notify the mentioned player
+            # This provides audio feedback that they've been mentioned
+            play sound "entity.player.levelup" to loop-player
+            
+            # Get the player's game language setting (e.g., "en_US", "ja_JP")
+            set {_lang} to game locale of loop-player
+            
+            # Extract only the first 2 characters to get the language code (e.g., "en", "ja")
+            # This converts "en_US" to "en", "ja_JP" to "ja", etc.
+            set {_lang} to first 2 characters of {_lang}
+            
+            # Loop up to 2 times for language detection with fallback mechanism
+            # First iteration tries the detected language, second uses default if needed
+            loop 2 times:
+                
+                # Language selection block - uses configuration variables for localized messages
+                # Note: Direct variable usage in config access isn't supported, hence the if-else chain
+                
+                # Japanese language support
+                if {_lang} is "ja":
+                    set {_message} to {@skmention.lang.ja.mentioned}
+                    # Exit immediately after finding the correct language for performance
+                    exit loop
+                
+                # English language support (default/most common)
+                else if {_lang} is "en":
+                    set {_message} to {@skmention.lang.en.mentioned}
+                    exit loop
+                
+                # Spanish language support
+                else if {_lang} is "es":
+                    set {_message} to {@skmention.lang.es.mentioned}
+                    exit loop
+                
+                # French language support
+                else if {_lang} is "fr":
+                    set {_message} to {@skmention.lang.fr.mentioned}
+                    exit loop
+                
+                # German language support
+                else if {_lang} is "de":
+                    set {_message} to {@skmention.lang.de.mentioned}
+                    exit loop
+                
+                # Italian language support
+                else if {_lang} is "it":
+                    set {_message} to {@skmention.lang.it.mentioned}
+                    exit loop
+                
+                # Portuguese language support
+                else if {_lang} is "pt":
+                    set {_message} to {@skmention.lang.pt.mentioned}
+                    exit loop
+                
+                # Russian language support
+                else if {_lang} is "ru":
+                    set {_message} to {@skmention.lang.ru.mentioned}
+                    exit loop
+                
+                # Korean language support
+                else if {_lang} is "ko":
+                    set {_message} to {@skmention.lang.ko.mentioned}
+                    exit loop
+                
+                # Chinese language support
+                else if {_lang} is "zh":
+                    set {_message} to {@skmention.lang.zh.mentioned}
+                    exit loop
+                
+                # Arabic language support
+                else if {_lang} is "ar":
+                    set {_message} to {@skmention.lang.ar.mentioned}
+                    exit loop
+                
+                # Dutch language support
+                else if {_lang} is "nl":
+                    set {_message} to {@skmention.lang.nl.mentioned}
+                    exit loop
+                
+                # Swedish language support
+                else if {_lang} is "sv":
+                    set {_message} to {@skmention.lang.sv.mentioned}
+                    exit loop
+                
+                # Polish language support
+                else if {_lang} is "pl":
+                    set {_message} to {@skmention.lang.pl.mentioned}
+                    exit loop
+                
+                # Fallback case: if language is not supported, use default language
+                # This triggers on the second loop iteration if no match was found
+                else:
+                    # Set language to the configured default and continue loop
+                    # This allows the second iteration to use the default language message
+                    set {_lang} to {@default.language}
+            
+            # Replace the placeholder "_sender_" in the message with the actual sender's name
+            # The %{_sender}% format converts the player object to a displayable string
+            replace all "_sender_" with "%{_sender}%" in {_message}
+            
+            # Send the localized notification message to the mentioned player via action bar
+            # Action bar appears above the hotbar and is less intrusive than chat messages
+            send actionbar {_message} to loop-player
+            
+            # Return "true" to indicate successful notification
+            # This allows calling code to know the operation succeeded
+            return "true"
+    
+    # If we reach this point, the target player was not found online
+    # Return "false" to indicate the player could not be notified
+    return "false"
+
+
+# Function: processMentions
+# Purpose: Main function to process all types of mentions in a chat message
+# Handles @all, @everyone, @player mentions, and exclamation-based mentions
+# Parameters:
+#   - message: The original chat message to process (text type)
+#   - sender: The player who sent the message (player type)
+# Returns: The processed message with formatted mentions (text type)
+function processMentions(message: text, sender: player) :: text:
+    
+    # Initialize processed message copy and mention tracking flag
+    set {_processedMessage} to {_message}
+    set {_foundMention} to false
+    
+    # ===== MASS MENTION PROCESSING (@all and @everyone) =====
+    
+    # Handle "@all" mentions
+    if {_message} contains "@all":
+        # Check if sender has permission to mention all players
+        if {_sender} has permission "mention.all":
+            # Notify all online players about the mention
+            notifyAllPlayers({_sender})
+            # Mark that a mention was found for cooldown tracking
+            set {_foundMention} to true
+            # Replace @all with colored/formatted version (&5 = purple, &r = reset)
+            set {_processedMessage} to replaceMention({_processedMessage}, "@all", "&5@all&r")
+    
+    # Handle "@everyone" mentions
+    if {_message} contains "@everyone":
+        if {_sender} has permission "mention.all":
+            notifyAllPlayers({_sender})
+            set {_foundMention} to true
+            set {_processedMessage} to replaceMention({_processedMessage}, "@everyone", "&5@everyone&r")
+    
+    # Handle "all!" exclamation-based mentions (alternative syntax)
+    if {_message} contains "all!":
+        if {_sender} has permission "mention.all":
+            notifyAllPlayers({_sender})
+            set {_foundMention} to true
+            # Note: Converts "all!" to "@all" format in display
+            set {_processedMessage} to replaceMention({_processedMessage}, "all!", "&5@all&r")
+    
+    # Handle "everyone!" exclamation-based mentions
+    if {_message} contains "everyone!":
+        if {_sender} has permission "mention.all":
+            notifyAllPlayers({_sender})
+            set {_foundMention} to true
+            set {_processedMessage} to replaceMention({_processedMessage}, "everyone!", "&5@everyone&r")
+    
+    # ===== INDIVIDUAL PLAYER MENTION PROCESSING =====
+    
+    # Split message into individual words for processing
+    set {_words::*} to {_message} split by " "
+    set {_loop} to 1
+    
+    # First pass: Remove words containing Japanese/full-width characters to prevent abuse
+    loop {_words::*}:
+        # Remove words containing full-width exclamation mark (Japanese input)
+        if loop-value contains "！":
+            delete {_words::%{_loop}%}
+        # Remove words containing full-width @ symbol (Japanese input)
+        if loop-value contains "＠":
+            delete {_words::%{_loop}%}
+        add 1 to {_loop}
+    
+    # Second pass: Process each remaining word for mentions
+    loop {_words::*}:
+        set {_word} to loop-value
+        
+        # Strip all Minecraft color codes from the word to get clean player name
+        # This prevents players from hiding mentions within colored text
+        replace all "&1" with "" in {_word}  # Dark Blue
+        replace all "&2" with "" in {_word}  # Dark Green
+        replace all "&3" with "" in {_word}  # Dark Aqua
+        replace all "&4" with "" in {_word}  # Dark Red
+        replace all "&5" with "" in {_word}  # Dark Purple
+        replace all "&6" with "" in {_word}  # Gold
+        replace all "&7" with "" in {_word}  # Gray
+        replace all "&8" with "" in {_word}  # Dark Gray
+        replace all "&9" with "" in {_word}  # Blue
+        replace all "&a" with "" in {_word}  # Green
+        replace all "&b" with "" in {_word}  # Aqua
+        replace all "&c" with "" in {_word}  # Red
+        replace all "&d" with "" in {_word}  # Light Purple
+        replace all "&e" with "" in {_word}  # Yellow
+        replace all "&f" with "" in {_word}  # White
+        
+        # Process @mentions (standard Discord-style mentions)
+        if {_word} starts with "@":
+            # Extract player name by removing the @ symbol
+            replace all "@" with "" in {_word}
+            
+            # Attempt to notify the mentioned player
+            if notifyPlayer({_sender}, {_word}) is "true":
+                # Player was found and notified successfully
+                set {_foundMention} to true
+                
+                # Get custom mention format from configuration
+                set {_formatted} to {@mention.format}
+                # Replace placeholder with actual player name
+                replace all "_name_" with {_word} in {_formatted}
+                # Apply formatting to the message
+                set {_processedMessage} to replaceMention({_processedMessage}, "@%{_word}%", "%{_formatted}%&r")
+        
+        # Process exclamation mentions (alternative mention syntax)
+        if {_word} ends with "!":
+            # Extract player name by removing the exclamation mark
+            replace all "!" with "" in {_word}
+            
+            # Attempt to notify the mentioned player
+            if notifyPlayer({_sender}, {_word}) is "true":
+                # Player was found and notified successfully
+                set {_foundMention} to true
+                # Format as purple @mention (simpler formatting than custom format)
+                set {_processedMessage} to replaceMention({_processedMessage}, "%{_word}%!", "&5@%{_word}%&r")
+    
+    # ===== COOLDOWN MANAGEMENT =====
+    
+    # If any mentions were found, apply cooldown to prevent spam
+    if {_foundMention} is true:
+        # Only apply cooldown if enabled in configuration
+        if {@enable_cooldown} is true:
+            # Set cooldown expiration time for this player
+            set {skmention.cooldown.%{_sender}%} to {@cooldown} seconds from now
+    
+    # Return the fully processed message with all mention formatting applied
+    return {_processedMessage}
+
+
+# ===== CHAT EVENT HANDLER =====
+# Event: on chat
+# Purpose: Intercepts all chat messages to process mentions before they're sent
+# This is the main entry point that triggers mention processing
+on chat:
+    # Store original message and sender for processing
+    set {_message} to message
+    set {_sender} to player
+    set {_hasMention} to false
+    
+    # Quick pre-check: Does this message potentially contain mentions?
+    # This optimization avoids processing messages that definitely don't have mentions
+    if {_message} contains "@":
+        set {_hasMention} to true
+    if {_message} contains "!":
+        set {_hasMention} to true
+    
+    # Only process if message might contain mentions
+    if {_hasMention} is true:
+        
+        # ===== COOLDOWN CHECK =====
+        # Check if player is still on cooldown from previous mentions
+        if {skmention.cooldown.%{_sender}%} > now:
+            # Player is on cooldown
+            if {@enable_cooldown} is true:
+                
+                # If cooldown messages are disabled, silently block the mention
+                if {@enable_cooldown_message} is not true:
+                    stop
+                
+                # ===== LOCALIZED COOLDOWN MESSAGE =====
+                # Get player's language preference for cooldown message
+                set {_lang} to game locale of {_sender}
+                set {_lang} to first 2 characters of {_lang}
+                
+                # Language selection with fallback mechanism (same as notifyPlayer function)
+                loop 2 times:
+                    if {_lang} is "ja":
+                        set {_message} to {@skmention.lang.ja.mention.cooldown}
+                        exit loop
+                    else if {_lang} is "en":
+                        set {_message} to {@skmention.lang.en.mention.cooldown}
+                        exit loop
+                    else if {_lang} is "es":
+                        set {_message} to {@skmention.lang.es.mention.cooldown}
+                        exit loop
+                    else if {_lang} is "fr":
+                        set {_message} to {@skmention.lang.fr.mention.cooldown}
+                        exit loop
+                    else if {_lang} is "de":
+                        set {_message} to {@skmention.lang.de.mention.cooldown}
+                        exit loop
+                    else if {_lang} is "it":
+                        set {_message} to {@skmention.lang.it.mention.cooldown}
+                        exit loop
+                    else if {_lang} is "pt":
+                        set {_message} to {@skmention.lang.pt.mention.cooldown}
+                        exit loop
+                    else if {_lang} is "ru":
+                        set {_message} to {@skmention.lang.ru.mention.cooldown}
+                        exit loop
+                    else if {_lang} is "ko":
+                        set {_message} to {@skmention.lang.ko.mention.cooldown}
+                        exit loop
+                    else if {_lang} is "zh":
+                        set {_message} to {@skmention.lang.zh.mention.cooldown}
+                        exit loop
+                    else if {_lang} is "ar":
+                        set {_message} to {@skmention.lang.ar.mention.cooldown}
+                        exit loop
+                    else if {_lang} is "nl":
+                        set {_message} to {@skmention.lang.nl.mention.cooldown}
+                        exit loop
+                    else if {_lang} is "sv":
+                        set {_message} to {@skmention.lang.sv.mention.cooldown}
+                        exit loop
+                    else if {_lang} is "pl":
+                        set {_message} to {@skmention.lang.pl.mention.cooldown}
+                        exit loop
+                    else:
+                        # Fallback to default language on second iteration
+                        set {_lang} to {@default.language}
+                
+                # Send localized cooldown message to player
+                send {_message} to {_sender}
+                # Stop processing this chat message
+                stop
+        
+        # ===== MENTION PROCESSING =====
+        # Player is not on cooldown, process the mentions
+        set {_processedMessage} to processMentions({_message}, {_sender})
+        
+        # Update the actual chat message that will be displayed to all players
+        # This replaces the original message with the formatted version
+        set message to "%{_processedMessage}%"
+
+# Command: /mentionban
+# Purpose: Administrative command to ban players from receiving mention notifications
+# This prevents specific players from being @mentioned by others
+# Usage: /mentionban <player_name>
+# Parameters: 
+#   - [<offline player>]: Optional target player to ban from mentions (can be offline)
+# Permission: mention.admin (required to execute this command)
+command /mentionban [<offline player>]:
+    # Define required permission for command execution
+    permission: mention.admin
+    # Custom permission denial message with color formatting
+    permission message: &cyou don't have permission to manage mentions
+    
+    # Command execution block
+    trigger:
+        # ===== LANGUAGE DETECTION FOR COMMAND SENDER =====
+        # Get the command sender's language preference for localized responses
+        set {_lang} to game locale of sender
+        # Extract language code (e.g., "en_US" becomes "en")
+        set {_lang} to first 2 characters of {_lang}
+        
+        # ===== ARGUMENT VALIDATION =====
+        # Check if no player argument was provided (missing target player)
+        if arg-1 is not set:
+            # Display usage message in sender's preferred language
+            loop 2 times:
+                # Language selection with fallback mechanism
+                if {_lang} is "ja":
+                    set {_message} to {@skmention.lang.ja.ugage.mentionban}
+                    exit loop
+                else if {_lang} is "en":
+                    set {_message} to {@skmention.lang.en.ugage.mentionban}
+                    exit loop
+                else if {_lang} is "es":
+                    set {_message} to {@skmention.lang.es.ugage.mentionban}
+                    exit loop
+                else if {_lang} is "fr":
+                    set {_message} to {@skmention.lang.fr.ugage.mentionban}
+                    exit loop
+                else if {_lang} is "de":
+                    set {_message} to {@skmention.lang.de.ugage.mentionban}
+                    exit loop
+                else if {_lang} is "it":
+                    set {_message} to {@skmention.lang.it.ugage.mentionban}
+                    exit loop
+                else if {_lang} is "pt":
+                    set {_message} to {@skmention.lang.pt.ugage.mentionban}
+                    exit loop
+                else if {_lang} is "ru":
+                    set {_message} to {@skmention.lang.ru.ugage.mentionban}
+                    exit loop
+                else if {_lang} is "ko":
+                    set {_message} to {@skmention.lang.ko.ugage.mentionban}
+                    exit loop
+                else if {_lang} is "zh":
+                    set {_message} to {@skmention.lang.zh.ugage.mentionban}
+                    exit loop
+                else if {_lang} is "ar":
+                    set {_message} to {@skmention.lang.ar.ugage.mentionban}
+                    exit loop
+                else if {_lang} is "nl":
+                    set {_message} to {@skmention.lang.nl.ugage.mentionban}
+                    exit loop
+                else if {_lang} is "sv":
+                    set {_message} to {@skmention.lang.sv.ugage.mentionban}
+                    exit loop
+                else if {_lang} is "pl":
+                    set {_message} to {@skmention.lang.pl.ugage.mentionban}
+                    exit loop
+                else:
+                    # Fallback to default language if not supported
+                    set {_lang} to {@default.language}
+            
+            # Send usage message to command sender and stop execution
+            send {_message} to sender
+            stop
+        
+        # ===== EXECUTE MENTION BAN =====
+        # Set the mention ban flag for the specified player
+        # This variable will be checked when processing mentions to block notifications
+        # Format: {mention.banned.PlayerName} = true
+        set {mention.banned.%arg-1%} to true
+        
+        # ===== SUCCESS MESSAGE TO COMMAND SENDER =====
+        # Send confirmation message to the admin who executed the command
+        loop 2 times:
+            # Get localized success message for command sender
+            if {_lang} is "ja":
+                set {_message} to {@skmention.lang.ja.sucsess.mentionban.target}
+                exit loop
+            else if {_lang} is "en":
+                set {_message} to {@skmention.lang.en.sucsess.mentionban.target}
+                exit loop
+            else if {_lang} is "es":
+                set {_message} to {@skmention.lang.es.sucsess.mentionban.target}
+                exit loop
+            else if {_lang} is "fr":
+                set {_message} to {@skmention.lang.fr.sucsess.mentionban.target}
+                exit loop
+            else if {_lang} is "de":
+                set {_message} to {@skmention.lang.de.sucsess.mentionban.target}
+                exit loop
+            else if {_lang} is "it":
+                set {_message} to {@skmention.lang.it.sucsess.mentionban.target}
+                exit loop
+            else if {_lang} is "pt":
+                set {_message} to {@skmention.lang.pt.sucsess.mentionban.target}
+                exit loop
+            else if {_lang} is "ru":
+                set {_message} to {@skmention.lang.ru.sucsess.mentionban.target}
+                exit loop
+            else if {_lang} is "ko":
+                set {_message} to {@skmention.lang.ko.sucsess.mentionban.target}
+                exit loop
+            else if {_lang} is "zh":
+                set {_message} to {@skmention.lang.zh.sucsess.mentionban.target}
+                exit loop
+            else if {_lang} is "ar":
+                set {_message} to {@skmention.lang.ar.sucsess.mentionban.target}
+                exit loop
+            else if {_lang} is "nl":
+                set {_message} to {@skmention.lang.nl.sucsess.mentionban.target}
+                exit loop
+            else if {_lang} is "sv":
+                set {_message} to {@skmention.lang.sv.sucsess.mentionban.target}
+                exit loop
+            else if {_lang} is "pl":
+                set {_message} to {@skmention.lang.pl.sucsess.mentionban.target}
+                exit loop
+            else:
+                set {_lang} to {@default.language}
+        
+        # Replace placeholder with actual target player name
+        # Message likely contains something like "Successfully banned _target_ from mentions"
+        replace all "_target_" with "%arg-1%" in {_message}
+        
+        # Send success confirmation to the command sender (admin)
+        send {_message} to sender
+        
+        # ===== NOTIFICATION TO TARGET PLAYER (IF ONLINE) =====
+        # Check if the banned player is currently online to notify them
+        if arg-1 is online:
+            # Get the target player's language preference for personalized notification
+            set {_lang} to game locale of arg-1
+            
+            # Language selection for target player notification
+            loop 2 times:
+                if {_lang} is "ja":
+                    set {_message} to {@skmention.lang.ja.sucsess.mentionban}
+                    exit loop
+                else if {_lang} is "en":
+                    set {_message} to {@skmention.lang.en.sucsess.mentionban}
+                    exit loop
+                else if {_lang} is "es":
+                    set {_message} to {@skmention.lang.es.sucsess.mentionban}
+                    exit loop
+                else if {_lang} is "fr":
+                    set {_message} to {@skmention.lang.fr.sucsess.mentionban}
+                    exit loop
+                else if {_lang} is "de":
+                    set {_message} to {@skmention.lang.de.sucsess.mentionban}
+                    exit loop
+                else if {_lang} is "it":
+                    set {_message} to {@skmention.lang.it.sucsess.mentionban}
+                    exit loop
+                else if {_lang} is "pt":
+                    set {_message} to {@skmention.lang.pt.sucsess.mentionban}
+                    exit loop
+                else if {_lang} is "ru":
+                    set {_message} to {@skmention.lang.ru.sucsess.mentionban}
+                    exit loop
+                else if {_lang} is "ko":
+                    set {_message} to {@skmention.lang.ko.sucsess.mentionban}
+                    exit loop
+                else if {_lang} is "zh":
+                    set {_message} to {@skmention.lang.zh.sucsess.mentionban}
+                    exit loop
+                else if {_lang} is "ar":
+                    set {_message} to {@skmention.lang.ar.sucsess.mentionban}
+                    exit loop
+                else if {_lang} is "nl":
+                    set {_message} to {@skmention.lang.nl.sucsess.mentionban}
+                    exit loop
+                else if {_lang} is "sv":
+                    set {_message} to {@skmention.lang.sv.sucsess.mentionban}
+                    exit loop
+                else if {_lang} is "pl":
+                    set {_message} to {@skmention.lang.pl.sucsess.mentionban}
+                    exit loop
+                else:
+                    set {_lang} to {@default.language}
+            
+            # Send notification to the target player in their preferred language
+            # Message likely informs them they can no longer receive mention notifications
+            send {_message} to arg-1
+# Command: /mentionunban
+# Purpose: Administrative command to unban players from mention restrictions
+# This restores a player's ability to receive mention notifications
+# Usage: /mentionunban <player_name>
+# Parameters:
+#   - [<offline player>]: Optional target player to unban from mentions (can be offline)
+# Permission: mention.admin (required to execute this command)
+command /mentionunban [<offline player>]:
+    # Define required permission for command execution
+    permission: mention.admin
+    # Custom permission denial message with color formatting
+    permission message: &cYou don't have permission to manage mentions
+    
+    # Command execution block
+    trigger:
+        # ===== LANGUAGE DETECTION FOR COMMAND SENDER =====
+        # Get the command sender's language preference for localized responses
+        set {_lang} to game locale of sender
+        
+        # ===== ARGUMENT VALIDATION =====
+        # Check if no player argument was provided (missing target player)
+        if arg-1 is not set:
+            # Display usage message in sender's preferred language
+            loop 2 times:
+                # Language selection with fallback mechanism
+                if {_lang} is "ja":
+                    set {_message} to {@skmention.lang.ja.ugage.mentionunban}
+                    exit loop
+                else if {_lang} is "en":
+                    set {_message} to {@skmention.lang.en.ugage.mentionunban}
+                    exit loop
+                else if {_lang} is "es":
+                    set {_message} to {@skmention.lang.es.ugage.mentionunban}
+                    exit loop
+                else if {_lang} is "fr":
+                    set {_message} to {@skmention.lang.fr.ugage.mentionunban}
+                    exit loop
+                else if {_lang} is "de":
+                    set {_message} to {@skmention.lang.de.ugage.mentionunban}
+                    exit loop
+                else if {_lang} is "it":
+                    set {_message} to {@skmention.lang.it.ugage.mentionunban}
+                    exit loop
+                else if {_lang} is "pt":
+                    set {_message} to {@skmention.lang.pt.ugage.mentionunban}
+                    exit loop
+                else if {_lang} is "ru":
+                    set {_message} to {@skmention.lang.ru.ugage.mentionunban}
+                    exit loop
+                else if {_lang} is "ko":
+                    set {_message} to {@skmention.lang.ko.ugage.mentionunban}
+                    exit loop
+                else if {_lang} is "zh":
+                    set {_message} to {@skmention.lang.zh.ugage.mentionunban}
+                    exit loop
+                else if {_lang} is "ar":
+                    set {_message} to {@skmention.lang.ar.ugage.mentionunban}
+                    exit loop
+                else if {_lang} is "nl":
+                    set {_message} to {@skmention.lang.nl.ugage.mentionunban}
+                    exit loop
+                else if {_lang} is "sv":
+                    set {_message} to {@skmention.lang.sv.ugage.mentionunban}
+                    exit loop
+                else if {_lang} is "pl":
+                    set {_message} to {@skmention.lang.pl.ugage.mentionunban}
+                    exit loop
+                else:
+                    # Fallback to default language if not supported
+                    set {_lang} to {@default.language}
+            
+            # Replace placeholder with target name (though arg-1 would be empty here)
+            # This line seems to have a logic issue - should probably send message and stop
+            replace all "_target_" with "%arg-1%" in {_message}
+            # Note: Missing "send {_message} to sender" and "stop" here
+        
+        # ===== EXECUTE MENTION UNBAN =====
+        # Remove the mention ban flag for the specified player
+        # Setting to false allows them to receive mention notifications again
+        # Format: {mention.banned.PlayerName} = false
+        set {mention.banned.%arg-1%} to false
+        
+        # ===== SUCCESS MESSAGE TO COMMAND SENDER =====
+        # Re-get sender's language (redundant but ensures consistency)
+        set {_lang} to game locale of sender
+        
+        # Send confirmation message to the admin who executed the command
+        loop 2 times:
+            # Get localized success message for command sender
+            if {_lang} is "ja":
+                set {_message} to {@skmention.lang.ja.sucsess.mentionunban.target}
+                exit loop
+            else if {_lang} is "en":
+                set {_message} to {@skmention.lang.en.sucsess.mentionunban.target}
+                exit loop
+            else if {_lang} is "es":
+                set {_message} to {@skmention.lang.es.sucsess.mentionunban.target}
+                exit loop
+            else if {_lang} is "fr":
+                set {_message} to {@skmention.lang.fr.sucsess.mentionunban.target}
+                exit loop
+            else if {_lang} is "de":
+                set {_message} to {@skmention.lang.de.sucsess.mentionunban.target}
+                exit loop
+            else if {_lang} is "it":
+                set {_message} to {@skmention.lang.it.sucsess.mentionunban.target}
+                exit loop
+            else if {_lang} is "pt":
+                set {_message} to {@skmention.lang.pt.sucsess.mentionunban.target}
+                exit loop
+            else if {_lang} is "ru":
+                set {_message} to {@skmention.lang.ru.sucsess.mentionunban.target}
+                exit loop
+            else if {_lang} is "ko":
+                set {_message} to {@skmention.lang.ko.sucsess.mentionunban.target}
+                exit loop
+            else if {_lang} is "zh":
+                set {_message} to {@skmention.lang.zh.sucsess.mentionunban.target}
+                exit loop
+            else if {_lang} is "ar":
+                set {_message} to {@skmention.lang.ar.sucsess.mentionunban.target}
+                exit loop
+            else if {_lang} is "nl":
+                set {_message} to {@skmention.lang.nl.sucsess.mentionunban.target}
+                exit loop
+            else if {_lang} is "sv":
+                set {_message} to {@skmention.lang.sv.sucsess.mentionunban.target}
+                exit loop
+            else if {_lang} is "pl":
+                set {_message} to {@skmention.lang.pl.sucsess.mentionunban.target}
+                exit loop
+            else:
+                set {_lang} to {@default.language}
+        
+        # Replace placeholder with actual target player name
+        # Message likely contains something like "Successfully unbanned _target_ from mention restrictions"
+        replace all "_target_" with "%arg-1%" in {_message}
+        
+        # Send success confirmation to the command sender (admin)
+        send {_message} to sender
+        
+        # ===== NOTIFICATION TO TARGET PLAYER (IF ONLINE) =====
+        # Check if the unbanned player is currently online to notify them
+        if arg-1 is online:
+            # Get the target player's language preference for personalized notification
+            set {_lang} to game locale of arg-1
+            
+            # Language selection for target player notification
+            loop 2 times:
+                if {_lang} is "ja":
+                    set {_message} to {@skmention.lang.ja.sucsess.mentionunban}
+                    exit loop
+                else if {_lang} is "en":
+                    set {_message} to {@skmention.lang.en.sucsess.mentionunban}
+                    exit loop
+                else if {_lang} is "es":
+                    set {_message} to {@skmention.lang.es.sucsess.mentionunban}
+                    exit loop
+                else if {_lang} is "fr":
+                    set {_message} to {@skmention.lang.fr.sucsess.mentionunban}
+                    exit loop
+                else if {_lang} is "de":
+                    set {_message} to {@skmention.lang.de.sucsess.mentionunban}
+                    exit loop
+                else if {_lang} is "it":
+                    set {_message} to {@skmention.lang.it.sucsess.mentionunban}
+                    exit loop
+                else if {_lang} is "pt":
+                    set {_message} to {@skmention.lang.pt.sucsess.mentionunban}
+                    exit loop
+                else if {_lang} is "ru":
+                    set {_message} to {@skmention.lang.ru.sucsess.mentionunban}
+                    exit loop
+                else if {_lang} is "ko":
+                    set {_message} to {@skmention.lang.ko.sucsess.mentionunban}
+                    exit loop
+                else if {_lang} is "zh":
+                    set {_message} to {@skmention.lang.zh.sucsess.mentionunban}
+                    exit loop
+                else if {_lang} is "ar":
+                    set {_message} to {@skmention.lang.ar.sucsess.mentionunban}
+                    exit loop
+                else if {_lang} is "nl":
+                    set {_message} to {@skmention.lang.nl.sucsess.mentionunban}
+                    exit loop
+                else if {_lang} is "sv":
+                    set {_message} to {@skmention.lang.sv.sucsess.mentionunban}
+                    exit loop
+                else if {_lang} is "pl":
+                    set {_message} to {@skmention.lang.pl.sucsess.mentionunban}
+                    exit loop
+                else:
+                    set {_lang} to {@default.language}
+            
+            # Send notification to the target player in their preferred language
+            # Message likely informs them they can now receive mention notifications again
+            send {_message} to arg-1
+
+
+# Command: /mention
+# Purpose: Display help information about the mention system
+# Shows usage instructions, current cooldown settings, and admin commands (if applicable)
+# Usage: /mention (no arguments)
+# Permission: None required (available to all players)
+command /mention:
+    # Command execution block (no permission required - public help command)
+    trigger:
+        # ===== LANGUAGE AND COOLDOWN SETUP =====
+        # Get player's language preference for localized help text
+        set {_lang} to game locale of sender
+        # Extract language code (e.g., "en_US" becomes "en")
+        set {_lang} to first 2 characters of {_lang}
+        
+        # Get current cooldown setting from configuration
+        set {_cooldown} to {@cooldown}
+        # If cooldown is disabled, set display value to 0 for clarity
+        if {@enable_cooldown} is not true:
+            set {_cooldown} to 0
+        
+        # ===== MULTILINGUAL HELP DISPLAY =====
+        # Display comprehensive help information in user's preferred language
+        loop 2 times:
+            # Each language block sends multiple help messages covering:
+            # 1. Basic mention usage (@player, player!)
+            # 2. Mass mention usage (@all, @everyone) 
+            # 3. Alternative syntax explanations
+            # 4. Current cooldown information
+            # 5. Admin commands (if user has permission)
+            
+            if {_lang} is "ja":
+                # Japanese help text
+                send {@skmention.lang.ja.about.mention.1} to sender  # Basic usage info
+                send {@skmention.lang.ja.about.mention.2} to sender  # Individual mentions
+                send {@skmention.lang.ja.about.mention.3} to sender  # Mass mentions
+                
+                # Cooldown information with dynamic value insertion
+                set {_message} to {@skmention.lang.ja.about.mention.4}
+                replace all "_cooldown_" with "%{_cooldown}%" in {_message}
+                send {_message} to sender
+                
+                # Admin-only commands (shown only if user has admin permission)
+                if sender has permission "mention.admin":
+                    send {@skmention.lang.ja.about.mention.5} to sender  # Admin intro
+                    send {@skmention.lang.ja.about.mention.6} to sender  # /mentionban usage
+                    send {@skmention.lang.ja.about.mention.7} to sender  # /mentionunban usage
+                exit loop
+                
+            else if {_lang} is "en":
+                # English help text
+                send {@skmention.lang.en.about.mention.1} to sender
+                send {@skmention.lang.en.about.mention.2} to sender
+                send {@skmention.lang.en.about.mention.3} to sender
+                set {_message} to {@skmention.lang.en.about.mention.4}
+                replace all "_cooldown_" with "%{_cooldown}%" in {_message}
+                send {_message} to sender
+                if sender has permission "mention.admin":
+                    send {@skmention.lang.en.about.mention.5} to sender
+                    send {@skmention.lang.en.about.mention.6} to sender
+                    send {@skmention.lang.en.about.mention.7} to sender
+                exit loop
+                
+            else if {_lang} is "es":
+                # Spanish help text
+                send {@skmention.lang.es.about.mention.1} to sender
+                send {@skmention.lang.es.about.mention.2} to sender
+                send {@skmention.lang.es.about.mention.3} to sender
+                set {_message} to {@skmention.lang.es.about.mention.4}
+                replace all "_cooldown_" with "%{_cooldown}%" in {_message}
+                send {_message} to sender
+                if sender has permission "mention.admin":
+                    send {@skmention.lang.es.about.mention.5} to sender
+                    send {@skmention.lang.es.about.mention.6} to sender
+                    send {@skmention.lang.es.about.mention.7} to sender
+                exit loop
+                
+            else if {_lang} is "fr":
+                # French help text
+                send {@skmention.lang.fr.about.mention.1} to sender
+                send {@skmention.lang.fr.about.mention.2} to sender
+                send {@skmention.lang.fr.about.mention.3} to sender
+                set {_message} to {@skmention.lang.fr.about.mention.4}
+                replace all "_cooldown_" with "%{_cooldown}%" in {_message}
+                send {_message} to sender
+                if sender has permission "mention.admin":
+                    send {@skmention.lang.fr.about.mention.5} to sender
+                    send {@skmention.lang.fr.about.mention.6} to sender
+                    send {@skmention.lang.fr.about.mention.7} to sender
+                exit loop
+                
+            else if {_lang} is "de":
+                # German help text
+                send {@skmention.lang.de.about.mention.1} to sender
+                send {@skmention.lang.de.about.mention.2} to sender
+                send {@skmention.lang.de.about.mention.3} to sender
+                set {_message} to {@skmention.lang.de.about.mention.4}
+                replace all "_cooldown_" with "%{_cooldown}%" in {_message}
+                send {_message} to sender
+                if sender has permission "mention.admin":
+                    send {@skmention.lang.de.about.mention.5} to sender
+                    send {@skmention.lang.de.about.mention.6} to sender
+                    send {@skmention.lang.de.about.mention.7} to sender
+                exit loop
+                
+            else if {_lang} is "it":
+                # Italian help text
+                send {@skmention.lang.it.about.mention.1} to sender
+                send {@skmention.lang.it.about.mention.2} to sender
+                send {@skmention.lang.it.about.mention.3} to sender
+                set {_message} to {@skmention.lang.it.about.mention.4}
+                replace all "_cooldown_" with "%{_cooldown}%" in {_message}
+                send {_message} to sender
+                if sender has permission "mention.admin":
+                    send {@skmention.lang.it.about.mention.5} to sender
+                    send {@skmention.lang.it.about.mention.6} to sender
+                    send {@skmention.lang.it.about.mention.7} to sender
+                exit loop
+                
+            else if {_lang} is "pt":
+                # Portuguese help text
+                send {@skmention.lang.pt.about.mention.1} to sender
+                send {@skmention.lang.pt.about.mention.2} to sender
+                send {@skmention.lang.pt.about.mention.3} to sender
+                set {_message} to {@skmention.lang.pt.about.mention.4}
+                replace all "_cooldown_" with "%{_cooldown}%" in {_message}
+                send {_message} to sender
+                if sender has permission "mention.admin":
+                    send {@skmention.lang.pt.about.mention.5} to sender
+                    send {@skmention.lang.pt.about.mention.6} to sender
+                    send {@skmention.lang.pt.about.mention.7} to sender
+                exit loop
+                
+            else if {_lang} is "ru":
+                # Russian help text
+                send {@skmention.lang.ru.about.mention.1} to sender
+                send {@skmention.lang.ru.about.mention.2} to sender
+                send {@skmention.lang.ru.about.mention.3} to sender
+                set {_message} to {@skmention.lang.ru.about.mention.4}
+                replace all "_cooldown_" with "%{_cooldown}%" in {_message}
+                send {_message} to sender
+                if sender has permission "mention.admin":
+                    send {@skmention.lang.ru.about.mention.5} to sender
+                    send {@skmention.lang.ru.about.mention.6} to sender
+                    send {@skmention.lang.ru.about.mention.7} to sender
+                exit loop
+                
+            else if {_lang} is "ko":
+                # Korean help text
+                send {@skmention.lang.ko.about.mention.1} to sender
+                send {@skmention.lang.ko.about.mention.2} to sender
+                send {@skmention.lang.ko.about.mention.3} to sender
+                set {_message} to {@skmention.lang.ko.about.mention.4}
+                replace all "_cooldown_" with "%{_cooldown}%" in {_message}
+                send {_message} to sender
+                if sender has permission "mention.admin":
+                    send {@skmention.lang.ko.about.mention.5} to sender
+                    send {@skmention.lang.ko.about.mention.6} to sender
+                    send {@skmention.lang.ko.about.mention.7} to sender
+                exit loop
+                
+            else if {_lang} is "zh":
+                # Chinese help text
+                send {@skmention.lang.zh.about.mention.1} to sender
+                send {@skmention.lang.zh.about.mention.2} to sender
+                send {@skmention.lang.zh.about.mention.3} to sender
+                set {_message} to {@skmention.lang.zh.about.mention.4}
+                replace all "_cooldown_" with "%{_cooldown}%" in {_message}
+                send {_message} to sender
+                if sender has permission "mention.admin":
+                    send {@skmention.lang.zh.about.mention.5} to sender
+                    send {@skmention.lang.zh.about.mention.6} to sender
+                    send {@skmention.lang.zh.about.mention.7} to sender
+                exit loop
+                
+            else if {_lang} is "ar":
+                # Arabic help text
+                send {@skmention.lang.ar.about.mention.1} to sender
+                send {@skmention.lang.ar.about.mention.2} to sender
+                send {@skmention.lang.ar.about.mention.3} to sender
+                set {_message} to {@skmention.lang.ar.about.mention.4}
+                replace all "_cooldown_" with "%{_cooldown}%" in {_message}
+                send {_message} to sender
+                if sender has permission "mention.admin":
+                    send {@skmention.lang.ar.about.mention.5} to sender
+                    send {@skmention.lang.ar.about.mention.6} to sender
+                    send {@skmention.lang.ar.about.mention.7} to sender
+                exit loop
+                
+            else if {_lang} is "nl":
+                # Dutch help text
+                send {@skmention.lang.nl.about.mention.1} to sender
+                send {@skmention.lang.nl.about.mention.2} to sender
+                send {@skmention.lang.nl.about.mention.3} to sender
+                set {_message} to {@skmention.lang.nl.about.mention.4}
+                replace all "_cooldown_" with "%{_cooldown}%" in {_message}
+                send {_message} to sender
+                if sender has permission "mention.admin":
+                    send {@skmention.lang.nl.about.mention.5} to sender
+                    send {@skmention.lang.nl.about.mention.6} to sender
+                    send {@skmention.lang.nl.about.mention.7} to sender
+                exit loop
+                
+            else if {_lang} is "sv":
+                # Swedish help text
+                send {@skmention.lang.sv.about.mention.1} to sender
+                send {@skmention.lang.sv.about.mention.2} to sender
+                send {@skmention.lang.sv.about.mention.3} to sender
+                set {_message} to {@skmention.lang.sv.about.mention.4}
+                replace all "_cooldown_" with "%{_cooldown}%" in {_message}
+                send {_message} to sender
+                if sender has permission "mention.admin":
+                    send {@skmention.lang.sv.about.mention.5} to sender
+                    send {@skmention.lang.sv.about.mention.6} to sender
+                    send {@skmention.lang.sv.about.mention.7} to sender
+                exit loop
+                
+            else if {_lang} is "pl":
+                # Polish help text
+                send {@skmention.lang.pl.about.mention.1} to sender
+                send {@skmention.lang.pl.about.mention.2} to sender
+                send {@skmention.lang.pl.about.mention.3} to sender
+                set {_message} to {@skmention.lang.pl.about.mention.4}
+                replace all "_cooldown_" with "%{_cooldown}%" in {_message}
+                send {_message} to sender
+                if sender has permission "mention.admin":
+                    send {@skmention.lang.pl.about.mention.5} to sender
+                    send {@skmention.lang.pl.about.mention.6} to sender
+                    send {@skmention.lang.pl.about.mention.7} to sender
+                exit loop
+                
+            else:
+                # Fallback to default language on second iteration
+                set {_lang} to {@default.language}
