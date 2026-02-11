@@ -1,6 +1,6 @@
 # skmention v1.0.0
 Welcome to skmention, a Skript for the Skript plugin! This script provides a versatile solution for Minecraft server players to mention others in chat. With support for multiple languages, cooldowns, and administrative control over mention features, it ensures a seamless communication experience.
-
+![](https://github.com/CountyClaaw4/Skmention/blob/main/Gallery.png)
 # ✨ Features
 - Player Mentions: Easily mention specific players using `@<player_name>` or `<player_name>!`.
 
