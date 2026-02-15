@@ -1,53 +1,75 @@
-# skmention v1.0.0
-Welcome to skmention, a Skript for the Skript plugin! This script provides a versatile solution for Minecraft server players to mention others in chat. With support for multiple languages, cooldowns, and administrative control over mention features, it ensures a seamless communication experience.
-![](https://github.com/CountyClaaw4/Skmention/blob/main/Gallery.png)
-# ✨ Features
-- Player Mentions: Easily mention specific players using `@<player_name>` or `<player_name>!`.
+# skmention v1.1.0
+[![](https://flat.badgen.net/github/release/CountyClaaw4/Skmention?icon=github)](https://github.com/CountyClaaw4/Skmention) [![](https://flat.badgen.net/github/license/CountyClaaw4/Skmention)](https://github.com/CountyClaaw4/Skmention)
+**skmention** is a Script that adds Discord-like mentions to Minecraft chat,
+making player communication clearer and reducing missed messages on busy servers.
 
-- Global Mentions: Mention all online players with `@all`, `@everyone`, `all!`, or `everyone!` commands (requires permission).
+<img src="https://cdn.jsdelivr.net/gh/CountyClaaw4/Skmention@main/Gallery.png" width="100%">
 
-- Multi-language Support: Action bar notifications are supported in `English`, `Japanese`, `Spanish`, `French`, `German`, `Italian`, `Portuguese`, `Russian`, `Korean`, `Chinese`, `Arabic`, `Dutch`, `Swedish`, and `Polish`.
+## ✨ Features
 
-- Cooldowns: A 5-second cooldown is implemented to prevent mention spam.
+* **Discord-like Mentions**  
+  Mention players in chat using `@player` or `player!` — messages are harder to miss on busy servers.
 
-- Admin Control: Administrators can ban or unban mention features for specific players.
+* **Clear Visual & Sound Notifications**  
+  Mentioned players receive an action bar message and a sound, ensuring important messages are noticed instantly.
 
-- Sound Notifications: Players receive a level-up sound notification when they are mentioned.
+* **Global Mentions with Admin Control**  
+  Use `@all` / `@everyone` to notify everyone online, with permission-based access for admins only.
+
+* **Spam-safe Cooldown System**  
+  Built-in cooldowns prevent mention abuse and keep chat readable.
+
+* **Multi-language Support (14+)**  
+  Automatically adapts to the player’s language, with a fallback to a configurable default.
+
+* **Highly Customizable**  
+  Adjust mention formats, sounds, cooldowns, and behavior through simple options.
+
+* **Player-level Moderation Tools**  
+  Ban or allow mentions per player for flexible server moderation.
+
+* **No Dependencies**  
+  Works as a standalone Skript — no extra addons required.
+
+* **Wide Version Compatibility**  
+  Supports Minecraft 1.12.2 → 1.21.11 and Skript 2.4.0+.
+
+## 🎯 Who is this for?
+
+✔ Servers with active global chat  
+✔ Communities that want Discord-like mentions  
+✔ Admins who want spam-safe notifications  
+
+❌ Servers that disable chat entirely  
+❌ Environments without Skript
 
 # 🚀 Commands & Permissions
+
 ## Player Commands
-- /mention
 
-    - Description: Displays information about the mention feature and available commands.
+* **`/mention`**
 
-    - Permission: None
+  * Shows info about the mention feature and available commands
+  * **Permission:** None
 
 ## Admin Commands
-- /mentionban <player>
 
-    - Description: Bans the specified player from using the mention feature.
+* **`/mentionban <player>`**
 
-    - Permission: mention.admin
+  * Ban a player from using mentions
+  * **Permission:** `mention.admin`
 
-- /mentionunban <player>
+* **`/mentionunban <player>`**
 
-    - Description: Unbans the specified player's mention feature.
+  * Unban a player to allow mentions again
+  * **Permission:** `mention.admin`
 
-    - Permission: mention.admin
+# 🐛 Report Issues
 
-# 🛠️ Installation
-1. Install Skript: Ensure you have the Skript plugin installed on your Minecraft server to use this script.
-
-2. Download skmention.sk: Download the skmention.sk file from this GitHub repository.
-
-3. Place the File: Place the downloaded file into your server's plugins/Skript/scripts/ folder.
-
-4. Reload Skript: Reload Skript by running the command /sk reload all or /sk reload mention.sk in your server console.
-
-# 🐛 Reporting Issues
-If you find any bugs or issues, please report them in the Issues section of the GitHub repository.
+Found a bug? Drop it in the **Issues** section on [GitHub](https://github.com/CountyClaaw4/Skmention/issues).
 
 # 📄 License
-This project is licensed under the MIT License. See the LICENSE file for more details.
 
-© 2025 CountyClaw4
+This project uses the **MIT License**. See the LICENSE file for details.
+
+© 2025-2026 CountyClaw4
