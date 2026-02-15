@@ -1,5 +1,6 @@
 # skmention v1.1.0
 [![](https://flat.badgen.net/github/release/CountyClaaw4/Skmention?icon=github)](https://github.com/CountyClaaw4/Skmention)
+
 **skmention** is a Script that adds Discord-like mentions to Minecraft chat,
 making player communication clearer and reducing missed messages on busy servers.
 
