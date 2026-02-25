@@ -30,8 +30,8 @@ making player communication clearer and reducing missed messages on busy servers
 * **Player-level Moderation Tools**  
   Ban or allow mentions per player for flexible server moderation.
 
-* **No Dependencies**  
-  Works as a standalone Skript — no extra addons required.
+* **No dependencies**
+  This script runs independently and does not require any addons.
 
 * **Wide Version Compatibility**  
   Supports Minecraft 1.12.2 → 1.21.11 and Skript 2.4.0+.
