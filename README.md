@@ -30,7 +30,7 @@ making player communication clearer and reducing missed messages on busy servers
 * **Player-level Moderation Tools**  
   Ban or allow mentions per player for flexible server moderation.
 
-* **No dependencies**
+* **No dependencies**  
   This script runs independently and does not require any addons.
 
 * **Wide Version Compatibility**  
