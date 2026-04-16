@@ -1,4 +1,4 @@
-# skmention v1.1.1
+# skmention v1.1.2
 [![](https://flat.badgen.net/github/release/CountyClaaw4/Skmention?icon=github)](https://github.com/CountyClaaw4/Skmention)
 [![](https://flat.badgen.net/badge/Go/Skripthub)](https://skripthub.net/scripts/teisupemc_owner/skmention.828) [![](https://flat.badgen.net/badge/Go/SkUnity)](https://forums.skunity.com/resources/skmention.1870/) [![](https://flat.badgen.net/badge/Go/Github)](https://github.com/CountyClaaw4/Skmention)
 
